@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Register() {
 
+  const { register } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -15,47 +17,51 @@ export default function Register() {
   });
 
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const update = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+  const handleChange = (event) => {
+
+    const {
+      name,
+      value,
+    } = event.target;
+
+    setForm((previous) => ({
+      ...previous,
+      [name]: value,
+    }));
   };
 
-  const submit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
 
-    if (form.password !== form.confirmPassword) {
+    event.preventDefault();
+
+    setError("");
+
+    if (
+      form.password !==
+      form.confirmPassword
+    ) {
       setError("Passwords do not match");
       return;
     }
 
+    setLoading(true);
+
     try {
 
-      const response = await fetch(
-        "http://localhost:5000/api/auth/register",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(form),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
-
-      alert("Registration successful");
+      await register(form);
 
       navigate("/login");
 
     } catch (error) {
+
       setError(error.message);
+
+    } finally {
+
+      setLoading(false);
+
     }
   };
 
@@ -66,13 +72,13 @@ export default function Register() {
 
         <h1>Create Account</h1>
 
-        <form onSubmit={submit}>
+        <form onSubmit={handleSubmit}>
 
           <input
             name="employeeId"
             placeholder="Employee ID"
             value={form.employeeId}
-            onChange={update}
+            onChange={handleChange}
             required
           />
 
@@ -80,7 +86,7 @@ export default function Register() {
             name="name"
             placeholder="Full Name"
             value={form.name}
-            onChange={update}
+            onChange={handleChange}
             required
           />
 
@@ -89,7 +95,7 @@ export default function Register() {
             type="email"
             placeholder="Email"
             value={form.email}
-            onChange={update}
+            onChange={handleChange}
             required
           />
 
@@ -98,7 +104,7 @@ export default function Register() {
             type="password"
             placeholder="Password"
             value={form.password}
-            onChange={update}
+            onChange={handleChange}
             required
           />
 
@@ -107,24 +113,47 @@ export default function Register() {
             type="password"
             placeholder="Confirm Password"
             value={form.confirmPassword}
-            onChange={update}
+            onChange={handleChange}
             required
           />
 
           <select
             name="role"
             value={form.role}
-            onChange={update}
+            onChange={handleChange}
           >
-            <option value="EMPLOYEE">Employee</option>
-            <option value="HR">HR / Admin</option>
+            <option value="EMPLOYEE">
+              Employee
+            </option>
+
+            <option value="HR">
+              HR / Admin
+            </option>
           </select>
 
-          {error && <p className="error">{error}</p>}
+          {error && (
+            <div className="error-message">
+              {error}
+            </div>
+          )}
 
-          <button>Create Account</button>
+          <button
+            type="submit"
+            disabled={loading}
+          >
+            {loading
+              ? "Creating..."
+              : "Create Account"}
+          </button>
 
         </form>
+
+        <p>
+          Already have an account?{" "}
+          <Link to="/login">
+            Sign in
+          </Link>
+        </p>
 
       </div>
 
