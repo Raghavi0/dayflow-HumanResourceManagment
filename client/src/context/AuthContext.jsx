@@ -1,44 +1,93 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
-const AuthContext = createContext();
+import api from "../services/api";
+
+const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem("dayflow_user");
-    return saved ? JSON.parse(saved) : null;
-  });
 
-  const login = async (email, password) => {
-    const response = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    const data = await response.json();
+  useEffect(() => {
 
-    if (!response.ok) {
-      throw new Error(data.message || "Login failed");
+    const token =
+      localStorage.getItem("dayflow_token");
+
+    if (!token) {
+      setLoading(false);
+      return;
     }
 
-    localStorage.setItem("dayflow_user", JSON.stringify(data.user));
-    localStorage.setItem("dayflow_token", data.token);
+    api.me()
+      .then((data) => {
+        setUser(data.user);
+      })
+      .catch(() => {
+        localStorage.removeItem("dayflow_token");
+        localStorage.removeItem("dayflow_user");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+
+  }, []);
+
+  const login = async (email, password) => {
+
+    const data =
+      await api.login({
+        email,
+        password,
+      });
+
+    localStorage.setItem(
+      "dayflow_token",
+      data.token
+    );
+
+    localStorage.setItem(
+      "dayflow_user",
+      JSON.stringify(data.user)
+    );
 
     setUser(data.user);
 
     return data.user;
   };
 
+  const register = async (formData) => {
+    return api.register(formData);
+  };
+
   const logout = () => {
-    localStorage.removeItem("dayflow_user");
-    localStorage.removeItem("dayflow_token");
+
+    localStorage.removeItem(
+      "dayflow_token"
+    );
+
+    localStorage.removeItem(
+      "dayflow_user"
+    );
+
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        register,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
