@@ -5,8 +5,9 @@ export default function Employees() {
   const [search, setSearch] = useState('');
   const [form, setForm] = useState({full_name:'',email:'',position:'',department:'',salary:'',hire_date:'',status:'Active'});
   useEffect(()=>fetch('http://localhost:5000/api/employees').then(r=>r.json()).then(setList),[]);
-  const add = async () => { await fetch('http://localhost:5000/api/employees',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)}); window.location.reload(); };
-  const del = async id => { await fetch('http://localhost:5000/api/employees/'+id,{method:'DELETE'}); window.location.reload(); };
+  const filtered = list.filter(e => (e.full_name||'').toLowerCase().includes(search.toLowerCase()) || (e.email||'').includes(search));
+  const add = async () => { await fetch('http://localhost:5000/api/employees',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)}); setForm({full_name:'',email:'',position:'',department:'',salary:'',hire_date:'',status:'Active'}); fetch('http://localhost:5000/api/employees').then(r=>r.json()).then(setList); };
+  const del = async id => { await fetch('http://localhost:5000/api/employees/'+id,{method:'DELETE'}); fetch('http://localhost:5000/api/employees').then(r=>r.json()).then(setList); };
   return <div>
     <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}><h2 className="gradient-text">Employees</h2><button className="btn-primary" onClick={add} style={{display:'flex',alignItems:'center',gap:8}}><Plus size={18}/> Add</button></div>
     <div className="glass-card" style={{display:'flex',gap:10,marginBottom:14,flexWrap:'wrap'}}>
