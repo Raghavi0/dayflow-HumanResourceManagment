@@ -1,113 +1,33 @@
-require("dotenv").config();
-
-const express = require("express");
-const cors = require("cors");
-
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const mysql = require('mysql2/promise');
 const app = express();
+app.use(cors());
+app.use(express.json());
 
-const PORT =
-  process.env.PORT || 5000;
+const dbPool = mysql.createPool({
+  host: process.env.DB_HOST || 'localhost',
+  user: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
+  database: process.env.DB_NAME || 'dayflow_hr',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
+});
 
-app.use(
-  cors({
-    origin:
-      "http://localhost:5173",
-    credentials: true,
-  })
-);
+app.set('db', dbPool);
 
-app.use(
-  express.json()
-);
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/employees', require('./routes/employeeRoutes'));
+app.use('/api/attendance', require('./routes/attendanceRoutes'));
+app.use('/api/leave', require('./routes/leaveRoutes'));
+app.use('/api/payroll', require('./routes/payrollRoutes'));
+app.use('/api/notifications', require('./routes/notificationRoutes'));
+app.use('/api/reports', require('./routes/reportRoutes'));
+app.use('/api/profile', require('./routes/profileRoutes'));
 
+app.get('/', (req, res) => res.json({ status: 'DayFlow HR API Active', version: '1.0.0' }));
 
-/* HEALTH */
-
-app.get(
-  "/api/health",
-  (req, res) => {
-    res.json({
-      success: true,
-      message:
-        "Dayflow backend is running",
-    });
-  }
-);
-
-
-/* ROUTES */
-
-const authRoutes =
-  require("./routes/authRoutes");
-
-const employeeRoutes =
-  require("./routes/employeeRoutes");
-
-const attendanceRoutes =
-  require("./routes/attendanceRoutes");
-
-const leaveRoutes =
-  require("./routes/leaveRoutes");
-
-const payrollRoutes =
-  require("./routes/payrollRoutes");
-
-const hrRoutes =
-  require("./routes/hrRoutes");
-
-const reportRoutes =
-  require("./routes/reportRoutes");
-
-const notificationRoutes =
-  require("./routes/notificationRoutes");
-
-
-app.use(
-  "/api/auth",
-  authRoutes
-);
-
-app.use(
-  "/api/employees",
-  employeeRoutes
-);
-
-app.use(
-  "/api/attendance",
-  attendanceRoutes
-);
-
-app.use(
-  "/api/leaves",
-  leaveRoutes
-);
-
-app.use(
-  "/api/payroll",
-  payrollRoutes
-);
-
-app.use(
-  "/api/hr",
-  hrRoutes
-);
-
-app.use(
-  "/api/reports",
-  reportRoutes
-);
-
-app.use(
-  "/api/notifications",
-  notificationRoutes
-);
-
-
-app.listen(
-  PORT,
-  () => {
-    console.log(
-      `Dayflow backend running on http://localhost:${PORT}`
-    );
-  }
-);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log('Server running on port ' + PORT));

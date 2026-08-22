@@ -1,73 +1,9 @@
-import { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
-
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 export default function Notifications() {
-
   const { user } = useAuth();
-
-  const [notifications, setNotifications] =
-    useState([]);
-
-  useEffect(() => {
-
-    if (!user) return;
-
-    fetch(
-      `/api/notifications/${user.id}`
-    )
-      .then((response) =>
-        response.json()
-      )
-      .then(setNotifications)
-      .catch(console.error);
-
-  }, [user]);
-
-  return (
-
-    <div className="notifications-page">
-
-      <h1>Notifications</h1>
-
-      {notifications.length === 0 ? (
-
-        <p>
-          No notifications yet.
-        </p>
-
-      ) : (
-
-        <div className="notifications-list">
-
-          {notifications.map(
-            (notification) => (
-
-              <div
-                className="notification-card"
-                key={notification.id}
-              >
-
-                <h3>
-                  {notification.title}
-                </h3>
-
-                <p>
-                  {notification.message}
-                </p>
-
-                <small>
-                  {notification.createdAt}
-                </small>
-
-              </div>
-
-            )
-          )}
-
-        </div>
-
-      )}
-
-    </div>
-  );
+  const [items,setItems]=useState([]);
+  useEffect(()=>{ if(user?.id) fetch('http://localhost:5000/api/notifications/'+user.id).then(r=>r.json()).then(setItems); },[user]);
+  const markRead = async id => { await fetch('http://localhost:5000/api/notifications/'+id+'/read',{method:'PUT',headers:{'Content-Type':'application/json'}}); window.location.reload(); };
+  return <div><h2 className="gradient-text">Notifications</h2><div className="glass-card"><button className="btn-primary" onClick={async()=>{await fetch('http://localhost:5000/api/notifications/'+user.id+'/read-all',{method:'PUT',headers:{'Content-Type':'application/json'}});window.location.reload();}} style={{marginBottom:12}}>Mark All Read</button><ul style={{listStyle:'none',display:'flex',flexDirection:'column',gap:10}}>{items.map(i=><li key={i.id} style={{padding:12,background:i.is_read?'rgba(255,255,255,0.02)':'rgba(255,224,255,0.06)',borderRadius:12,border:'1px solid rgba(255,255,255,0.05)'}}><div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}><strong>{i.title}</strong><button onClick={()=>markRead(i.id)} style={{fontSize:'0.75rem',padding:'4px 8px',borderRadius:6,border:'none',cursor:'pointer',background:'rgba(255,255,255,0.1)',color:'var(--text-main)'}}>{i.is_read?'Read':'Mark Read'}</button></div><span style={{color:'var(--text-sub)',fontSize:'0.9rem'}}>{i.message}</span></li>)}</ul></div></div>;
 }
