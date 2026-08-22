@@ -98,10 +98,7 @@ Employee Dashboard
 
 >> Project Structure
 
-<img width="415" height="707" alt="image" src="https://github.com/user-attachments/assets/58d3fb7d-3d35-4e19-8a9c-73c00ef6ff25" />
-<img width="427" height="751" alt="image" src="https://github.com/user-attachments/assets/16ceef87-dab5-4914-9fb0-4a4a860fc716" />
-<img width="432" height="554" alt="image" src="https://github.com/user-attachments/assets/c6487df5-441d-4876-97eb-82c633aad453" />
-
+<img width="1024" height="1536" alt="project structure" src="https://github.com/user-attachments/assets/a2ec04cf-bd6e-4136-b5f3-1f588c365c50" />
 
 >> Project Objective
 
