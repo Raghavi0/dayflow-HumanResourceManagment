@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { API_URL } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 export default function EmployeeDashboard() {
   const { user } = useAuth();
   const [attendance, setAttendance] = useState([]);
   const [leave, setLeave] = useState([]);
-  useEffect(()=>{ fetch('http://localhost:5000/api/attendance').then(r=>r.json()).then(setAttendance); fetch('http://localhost:5000/api/leave').then(r=>r.json()).then(d=>setLeave(d.filter(x=>x.employee_id===user?.id||x.user_id===user?.id))); },[user]);
+  useEffect(()=>{ fetch(API_URL + '/api/attendance').then(r=>r.json()).then(setAttendance); fetch(API_URL + '/api/leave').then(r=>r.json()).then(d=>setLeave(d.filter(x=>x.employee_id===user?.id||x.user_id===user?.id))); },[user]);
   return <div>
     <h2 style={{fontSize:'2rem',fontWeight:700,marginBottom:24}}><span className="gradient-text">Good morning, {user?.name?.split(' ')[0] || 'Employee'}</span></h2>
     <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(220px,1fr))',gap:20}}>
@@ -19,3 +20,5 @@ export default function EmployeeDashboard() {
     </div>
   </div>;
 }
+
+

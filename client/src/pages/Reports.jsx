@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import { API_URL } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 export default function Reports() {
   const { user } = useAuth();
   const [msg,setMsg]=useState('');
-  const generate = async () => { const r = await fetch('http://localhost:5000/api/reports',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({report_type:'Summary',generated_by:user?.id||1})}); const d = await r.json(); setMsg('Report saved ID '+d.id); };
+  const generate = async () => { const r = await fetch(API_URL + '/api/reports',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({report_type:'Summary',generated_by:user?.id||1})}); const d = await r.json(); setMsg('Report saved ID '+d.id); };
   return <div><h2 className="gradient-text">Reports & Analytics</h2>
     <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(260px,1fr))',gap:20}}>
       <div className="glass-card"><h3>Attendance Rate</h3><p style={{fontSize:'2rem',fontWeight:800,color:'#00ffa3'}}>92%</p><p style={{color:'var(--text-sub)',fontSize:'0.85rem'}}>Present / Total</p></div>
@@ -14,3 +15,5 @@ export default function Reports() {
     <div className="glass-card" style={{marginTop:20}}><h3>Generate Report</h3><button className="btn-primary" onClick={generate}>Generate Report</button>{msg && <p style={{marginTop:10,color:'var(--success)'}}>{msg}</p>}</div>
   </div>;
 }
+
+

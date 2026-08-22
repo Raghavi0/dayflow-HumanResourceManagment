@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { API_URL } from '../services/api';
 import { Plus, Trash2 } from 'lucide-react';
 export default function Employees() {
   const [list, setList] = useState([]);
   const [search, setSearch] = useState('');
   const [form, setForm] = useState({full_name:'',email:'',position:'',department:'',salary:'',hire_date:'',status:'Active'});
-  useEffect(()=>fetch('http://localhost:5000/api/employees').then(r=>r.json()).then(setList),[]);
+  useEffect(()=>fetch(API_URL + '/api/employees').then(r=>r.json()).then(setList),[]);
   const filtered = list.filter(e => (e.full_name||'').toLowerCase().includes(search.toLowerCase()) || (e.email||'').includes(search));
-  const add = async () => { await fetch('http://localhost:5000/api/employees',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)}); setForm({full_name:'',email:'',position:'',department:'',salary:'',hire_date:'',status:'Active'}); fetch('http://localhost:5000/api/employees').then(r=>r.json()).then(setList); };
-  const del = async id => { await fetch('http://localhost:5000/api/employees/'+id,{method:'DELETE'}); fetch('http://localhost:5000/api/employees').then(r=>r.json()).then(setList); };
+  const add = async () => { await fetch(API_URL + '/api/employees',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(form)}); setForm({full_name:'',email:'',position:'',department:'',salary:'',hire_date:'',status:'Active'}); fetch(API_URL + '/api/employees').then(r=>r.json()).then(setList); };
+  const del = async id => { await fetch(API_URL + '/api/employees/'+id,{method:'DELETE'}); fetch(API_URL + '/api/employees').then(r=>r.json()).then(setList); };
   return <div>
     <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:20}}><h2 className="gradient-text">Employees</h2><button className="btn-primary" onClick={add} style={{display:'flex',alignItems:'center',gap:8}}><Plus size={18}/> Add</button></div>
     <div className="glass-card" style={{display:'flex',gap:10,marginBottom:14,flexWrap:'wrap'}}>
@@ -24,3 +25,5 @@ export default function Employees() {
     </div>
   </div>;
 }
+
+

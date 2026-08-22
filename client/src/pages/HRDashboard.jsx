@@ -1,4 +1,5 @@
 import React from 'react';
+import { API_URL } from '../services/api';
 import { Link } from 'react-router-dom';
 import { Users, Clock, CalendarDays, BadgeDollarSign, FileText, Bell, BarChart3 } from 'lucide-react';
 
