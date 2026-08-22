@@ -1,77 +1,111 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "./AuthContext";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+
+    event.preventDefault();
 
     setError("");
     setLoading(true);
 
     try {
-      const user = await login(email, password);
 
-      if (user.role === "ADMIN" || user.role === "HR") {
-        navigate("/admin");
+      const user =
+        await login(email, password);
+
+      if (
+        user.role === "HR" ||
+        user.role === "ADMIN"
+      ) {
+        navigate("/hr-dashboard");
       } else {
-        navigate("/employee");
+        navigate("/employee-dashboard");
       }
-    } catch (err) {
-      setError(err.message);
+
+    } catch (error) {
+
+      setError(error.message);
+
     } finally {
+
       setLoading(false);
+
     }
   };
 
   return (
     <div className="auth-page">
+
       <div className="auth-card">
 
         <h1>Dayflow</h1>
-        <p>Every workday, perfectly aligned.</p>
+
+        <p>
+          Every workday, perfectly aligned.
+        </p>
 
         <form onSubmit={handleSubmit}>
 
-          <label>Email</label>
           <input
             type="email"
+            placeholder="Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter email"
+            onChange={(event) =>
+              setEmail(event.target.value)
+            }
             required
           />
 
-          <label>Password</label>
           <input
             type="password"
+            placeholder="Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter password"
+            onChange={(event) =>
+              setPassword(event.target.value)
+            }
             required
           />
 
           {error && (
-            <div className="error">
+            <div className="error-message">
               {error}
             </div>
           )}
 
-          <button disabled={loading}>
-            {loading ? "Signing in..." : "Sign In"}
+          <button
+            type="submit"
+            disabled={loading}
+          >
+            {loading
+              ? "Signing in..."
+              : "Sign In"}
           </button>
 
         </form>
 
+        <p>
+          Don't have an account?{" "}
+          <Link to="/register">
+            Create account
+          </Link>
+        </p>
+
       </div>
+
     </div>
   );
 }
+     
+       
