@@ -98,86 +98,10 @@ Employee Dashboard
 
 >> Project Structure
 
-dayflow-HumanResourceManagment/
-│
-├── client/
-│   ├── public/
-│   ├── src/
-│   │   ├── assets/
-│   │   │
-│   │   ├── components/
-│   │   │   ├── Navbar.jsx
-│   │   │   ├── Sidebar.jsx
-│   │   │   ├── StatCard.jsx
-│   │   │   ├── NotificationBell.jsx
-│   │   │   ├── ProtectedRoute.jsx
-│   │   │   └── LoadingSpinner.jsx
-│   │   │
-│   │   ├── pages/
-│   │   │   ├── Login.jsx
-│   │   │   ├── Register.jsx
-│   │   │   ├── EmployeeDashboard.jsx
-│   │   │   ├── HRDashboard.jsx
-│   │   │   ├── Profile.jsx
-│   │   │   ├── Employees.jsx
-│   │   │   ├── Attendance.jsx
-│   │   │   ├── Leave.jsx
-│   │   │   ├── LeaveApprovals.jsx
-│   │   │   ├── Payroll.jsx
-│   │   │   ├── Reports.jsx
-│   │   │   └── Notifications.jsx
-│   │   │
-│   │   ├── services/
-│   │   │   └── api.js
-│   │   │
-│   │   ├── context/
-│   │   │   └── AuthContext.jsx
-│   │   │
-│   │   ├── App.jsx
-│   │   ├── main.jsx
-│   │   └── index.css
-│   │
-│   ├── package.json
-│   └── vite.config.js
-│
-├── server/
-│   ├── controllers/
-│   │   ├── authController.js
-│   │   ├── employeeController.js
-│   │   ├── attendanceController.js
-│   │   ├── leaveController.js
-│   │   ├── payrollController.js
-│   │   └── notificationController.js
-│   │
-│   ├── routes/
-│   │   ├── authRoutes.js
-│   │   ├── employeeRoutes.js
-│   │   ├── attendanceRoutes.js
-│   │   ├── leaveRoutes.js
-│   │   ├── payrollRoutes.js
-│   │   └── notificationRoutes.js
-│   │
-│   ├── middleware/
-│   │   ├── authMiddleware.js
-│   │   └── roleMiddleware.js
-│   │
-│   ├── db/
-│   │   └── database.js
-│   │
-│   ├── server.js
-│   ├── package.json
-│   └── .env
-│
-├── database/
-│   └── schema.sql
-│
-├── docs/
-│   ├── architecture/
-│   ├── screenshots/
-│   └── requirements.md
-│
-├── .gitignore
-└── README.md
+<img width="415" height="707" alt="image" src="https://github.com/user-attachments/assets/58d3fb7d-3d35-4e19-8a9c-73c00ef6ff25" />
+<img width="427" height="751" alt="image" src="https://github.com/user-attachments/assets/16ceef87-dab5-4914-9fb0-4a4a860fc716" />
+<img width="432" height="554" alt="image" src="https://github.com/user-attachments/assets/c6487df5-441d-4876-97eb-82c633aad453" />
+
 
 >> Project Objective
 
